@@ -14,9 +14,17 @@
                 <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">Settings</a>
                 <div class="dropdown-menu" aria-labelledby="dropdown01">
+
+                <% if (!username) { %> 
+
                     <a class="dropdown-item" href="/users/login">Login</a>
                     <a class="dropdown-item" href="/users/register">Register</a>
+
+                <% } else { %>
+
                     <a class="dropdown-item" href="/users/logout">Logout</a>
+
+                <% } %>
                 </div>
             </li>
         </ul>

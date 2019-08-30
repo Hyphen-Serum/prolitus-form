@@ -9,37 +9,17 @@ module.exports = {
     registerPage: (req, res) => {
         res.render('layouts/registration.ejs', {
             message: 'Register here',
-            title: 'Register Page'
+            title: 'Register Page',
+            username: req.session.username
         });
     },
 
     addRegister: (req, res) => {
-        console.log(req.body)
-        console.log(req.files)
 
         if (!req.files) {
             return res.status(400).send('No files were uploaded.');
         }
 
-
-        // var usersSave = {
-        //     'name' : req.body.name,
-        //     'username' : req.body.username,
-        //     'email' : req.body.email,
-        //     'password' : req.body.password,
-        //     'hobbies' : req.body.hobbies,
-        //     'gender' : req.body.gender,
-        //     'dob' : req.body.dob,
-        //     'address1' : req.body.address1,
-        //     'address2' : req.body.address2,
-        //     'city' : req.body.city,
-        //     'country' : req.body.country,
-        //     'zip' : req.body.zip,
-        //     'textareawrite' : req.body.textareawrite,
-        //     'image' : req.files.avtar,
-        //     'created' : req.body.created,
-        //     'modified' : req.body.modified
-        // }
 
         let message = '';
         let name = req.body.name;
@@ -60,6 +40,8 @@ module.exports = {
         let image_name = uploadedFile.name;
         let fileExtension = uploadedFile.mimetype.split('/')[1];
         image_name = username + '.' + fileExtension;
+        console.log("image name: " + image_name);
+        console.log("Upload file name: " + uploadedFile);
 
 
         let usernameQuery = "SELECT * FROM users WHERE username = '" + username + "' ";
@@ -84,8 +66,6 @@ module.exports = {
                         }
 
                         // send the player's details to the databse
-                        // let query = "INSERT INTO users (name, username, email, password, hobbies, gender, dob, address1, address2, city, country, zip, textareawrite, avtar, created, modified) VALUES ('" + users +"') "
-                        // let insertQuery  = mysql.format('INSERT INTO users SET ?');
                         let insertQuery = "INSERT INTO `users` (name, username, email, password, hobbies, gender, dob, address1, address2, city, country, zip, textareawrite, avtar) VALUES ('" + name + "', '" + username + "', '" + email + "', '" + password + "', '" + hobbies + "', '" + gender + "', '" + dob + "', '" + address1 + "', '" + address2 + "', '" + city + "', '" + country + "', '" + zip + "', '" + textareawrite + "', '" + image_name + "')";
 
                         console.log("Data:  " + insertQuery)
@@ -109,26 +89,30 @@ module.exports = {
 
     loginPage: (req, res) => {
         res.render('layouts/login.ejs', {
-            title: 'Login'
+            title: 'Login',
+            username: req.session.username
         });
     },
 
     userLogin: (req, res) => {
-        let email = req.body.email;
         let password = req.body.password;
         let username = req.body.username;
+        let sess = req.session;
 
-        db.query("SELECT * FROM users WHERE username = ?", [username], (err, result, fields) => {
+        db.query("SELECT a.*, DATE_FORMAT(dob, '%Y%m%d') as dob FROM users a WHERE username = ?", [username], (err, result, fields) => {
 
             if (err) {
                 return res.status(400).send(err);
             } else {
                 if (result.length > 0) {
+                    
                     if(result[0].password == password) {
+                        var fname=req.session.username;
                         res.render('layouts/welcome.ejs', {
                             title: 'Welcome',
-                            message: 'Login sucessfull',
-                            username: username
+                            message: 'You can login',
+                            username: username,
+                            fname:(fname)?fname:'',
                         })
                     } else {
                         res.status(204).send({ message: 'Email and password not match' });

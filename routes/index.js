@@ -1,8 +1,6 @@
 module.exports = {
     homePage: (req, res) => {
-        let username = req.body.username;
         let query = "SELECT * FROM `users` ORDER BY id ASC";
-        
         db.query(query, (err, result) => {
             if (err) {
                 res.redirect('/');
@@ -10,8 +8,25 @@ module.exports = {
 
             res.render('layouts/welcome.ejs', {
                 title: 'Home page',
-                username: username
-            })
+                username: req.session.fname,
+                message: ''
+            });
+        });
+    },
+
+    userHomePage: (req, res) => {
+        let query = "SELECT * FROM users ORDER BY id ASC";
+
+        db.query(query, (err, result) => {
+            if (err) {
+                res.redirect('/');
+            }
+            res.render('middleware/users-panel.ejs', {
+                title: 'User Dashbord',
+                username: req.username,
+                users: result,
+                message: ''
+            });
         })
     }
 }

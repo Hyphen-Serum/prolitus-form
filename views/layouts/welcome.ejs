@@ -2,22 +2,25 @@
 <main role="main" class="container">
     <div class="my-5 p-3 bg-white rounded shadow-sm">
 
+        <% if (message != '') { %>
+
+        <p class="text-center text-danger"><%= message %></p>
+        <% } %>
+
+        
+        <%if(!username){%>
+
         <div class="media text-muted pt-3">
-           
-           
-                
-           <%if(!username){%>
-                <small class="d-block text-right mt-3 pb-4">
-                        <a href="/users/register">If not registered</a>
-                </small>
-            <%}%>
-                
-                <%= username %>
-                
-                
-            
-            
+            <small class="d-block text-right mt-3 pb-4">
+                <a href="/users/register">If not registered</a>
+            </small>
+
+        <%} else { %>
+            <a type="button" class="btn btn-dark" href="/users/edit-dashbord">see your dashboard</a><br>
+            <%= username %>
+
         </div>
+        <% } %>
     </div>
 </main>
 

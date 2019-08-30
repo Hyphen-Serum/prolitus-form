@@ -3,11 +3,12 @@ const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
-const path = require('path');
+// const path = require('path');
 const keys = require('./config/keys');
 
-const {homePage} = require('./routes/index');
-const {registerPage, addRegister, loginPage, userLogin, userLogout} = require('./routes/users');
+const {homePage, userHomePage} = require('./routes/index'); // index.js
+const {registerPage, addRegister, loginPage, userLogin, userLogout} = require('./routes/users'); // user.js
+const {adminLogin, adminPage} = require('./routes/admin'); // admin.js
 
 
 const app = express();
@@ -50,6 +51,10 @@ app.get('/users/register', registerPage);
 app.get('/users/login', loginPage);
 app.get('/users/login', loginPage);
 app.get('/users/logout', userLogout);
+app.get('/users/edit-dashbord', userHomePage);
+
+app.get('/users/admin', adminLogin);
+app.post('/users/admin', adminPage);
 
 app.post('/users/register', addRegister);
 app.post('/users/login', userLogin);
