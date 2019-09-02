@@ -8,7 +8,7 @@ const keys = require('./config/keys');
 
 const {homePage, userHomePage} = require('./routes/index'); // index.js
 const {registerPage, addRegister, loginPage, userLogin, userLogout} = require('./routes/users'); // user.js
-const {adminLogin, adminPage} = require('./routes/admin'); // admin.js
+const {adminLogin, adminPage, adminDeleteUser} = require('./routes/admin'); // admin.js
 
 
 const app = express();
@@ -54,6 +54,8 @@ app.get('/users/logout', userLogout);
 app.get('/users/edit-dashbord', userHomePage);
 
 app.get('/users/admin', adminLogin);
+app.get('/users/admin/delete/:id', adminDeleteUser);
+
 app.post('/users/admin', adminPage);
 
 app.post('/users/register', addRegister);

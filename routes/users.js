@@ -36,18 +36,15 @@ module.exports = {
         let zip = req.body.zip;
         let textareawrite = req.body.textareawrite;
         let uploadedFile = req.files.avtar;
+        // let status;
 
         let image_name = uploadedFile.name;
         let fileExtension = uploadedFile.mimetype.split('/')[1];
         image_name = username + '.' + fileExtension;
-
-        // checkbox select
-            let controls = req.body.hobbies;
-            let checkboxselect;
         
-            checkboxselect = controls.join();
 
-            console.log("Checkbox: " + checkboxselect);
+        hobbies = hobbies.join(' ');
+        console.log('Hobbies: ' + hobbies);
 
         let usernameQuery = "SELECT * FROM users WHERE username = '" + username + "' ";
 
@@ -71,21 +68,21 @@ module.exports = {
                         }
 
                         // send the player's details to the databse
-                        let insertQuery = "INSERT INTO `users` (name, username, email, password, hobbies, gender, dob, address1, address2, city, country, zip, textareawrite, avtar) VALUES ('" + name + "', '" + username + "', '" + email + "', '" + password + "', '" + checkboxselect + "', '" + gender + "', '" + dob + "', '" + address1 + "', '" + address2 + "', '" + city + "', '" + country + "', '" + zip + "', '" + textareawrite + "', '" + image_name + "')";
+                        let insertQuery = "INSERT INTO `users` (name, username, email, password, hobbies, gender, dob, address1, address2, city, country, zip, textareawrite, avtar) VALUES ('" + name + "', '" + username + "', '" + email + "', '" + password + "', '" + hobbies + "', '" + gender + "', '" + dob + "', '" + address1 + "', '" + address2 + "', '" + city + "', '" + country + "', '" + zip + "', '" + textareawrite + "', '" + image_name + "')";
 
-                        console.log("Data:  " + insertQuery)
                         db.query(insertQuery, (err, result) => {
                             if (err) {
                                 return res.status(500).send(err);
                             }
-                            res.redirect('/');
+                            res.redirect('/users/login');
                         });
                     });
                 } else {
                     message = `Invalid File format. Only 'gif', 'jpeg', 'png' images are allowed.`;
                     res.render('layouts/registration.ejs', {
                         title: 'Register here',
-                        message
+                        message,
+                        username: req.username
                     });
                 }
             }
@@ -127,6 +124,11 @@ module.exports = {
                 } 
             }
         });
+    },
+
+    userProfile: (req, res) => {
+        let username = req.body.username;
+        let query = "SELECT username FROM users WHERE"
     },
 
     userLogout: (req, res) => {

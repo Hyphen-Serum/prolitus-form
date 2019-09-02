@@ -23,7 +23,7 @@ module.exports = {
         if (username === 'admin' && password === 'admin123') {
             db.query(query, (err, result) => {
                 if (err) {
-                    res.redirect('/');
+                    res.redirect('');
                 }
                 res.render('middleware/admin-panel.ejs', {
                     title: 'Admin Page',
@@ -36,5 +36,37 @@ module.exports = {
         } else {
             res.redirect('/');
         }
+    },
+
+    adminDeleteUser: (req, res) => {
+        let userID = req.params.id;
+        let getImageQuery = "SELECT avtar FROM `users` WHERE id = '" + userID + "'";
+        let deletUser = "DELETE FROM `users` WHERE id = '" + userID + "'";
+
+        db.query(getImageQuery, (err, result) => {
+            if (err) {
+                return res.status(500).send(err);
+            }
+
+            let image = result[0].avtar;
+
+            fs.unlink(`public/assets/img/${image}`, (err) => {
+                if (err) {
+                    return res.status(500).send(err);
+                }
+                db.query(deletUser, (err, result) => {
+                    if (err) {
+                        return res.status(500).send(err);
+                    }
+                    res.render('middleware/admin-panel.ejs', {
+                        title: '',
+                        message: '',
+                        username: req.username,
+                        users: result
+                    });
+                });
+            });
+        });
     }
+
 }
